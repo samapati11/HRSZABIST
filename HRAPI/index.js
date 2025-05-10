@@ -29,6 +29,62 @@ app.get('/',async(requestAnimationFrame,res)=>{
             }catch(err){
                 res.status(500).json({error:err.message});
             }});
+             app.get('/43',async(req,res)=>{
+                    try{
+                        const result=await pool.query('select e.employee_id, e.first_name,e.last_name,jh.job_id,jh.start_date, d.department_id, d.department_name from employees e inner join job_history jh on e.employee_id = jh.employee_id  inner join  departments d on e.department_id = d.department_id limit 3;');
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+app.get('/44',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`select e.employee_id, e.first_name,e.last_name,jh.job_id,jh.start_date, d.department_id, d.department_name from employees e inner join job_history jh on e.employee_id = jh.employee_id  inner join  departments d on e.department_id = d.department_id inner join locations l on d.location_id = l.location_id limit 3`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+                    app.get('/45',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`select e.employee_id, e.first_name,e.last_name,jh.job_id,jh.start_date, d.department_id, d.department_name from employees e inner join job_history jh on e.employee_id = jh.employee_id  inner join  departments d on e.department_id = d.department_id inner join locations l on d.location_id = l.location_id  inner join countries c on l.country_id = c.country_id limit 3`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+
+                    app.get('/46',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`select e.employee_id, e.first_name,e.last_name,jh.job_id,jh.start_date, d.department_id, d.department_name from job_history jh left outer join employees e on jh.employee_id = e.employee_id  left outer join  departments d on jh.department_id = d.department_id limit 3`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+        app.get('/47',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`select e.employee_id, e.first_name,e.last_name,jh.start_date, j.job_id,j.job_title from job_history jh left outer join employees e on jh.employee_id = e.employee_id  left outer join  jobs j on jh.job_id = j.job_id limit 3`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+                    app.get('/48',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`select e.employee_id, e.first_name,e.last_name,jh.start_date, j.job_id,j.job_title,d.department_id,d.department_name from job_history jh left outer join employees e on jh.employee_id = e.employee_id  left outer join  jobs j on jh.job_id = j.job_id left outer join departments d on jh.department_id = d.department_id limit 3`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+
+                     app.get('/49',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`select e.employee_id, e.first_name,e.last_name,jh.start_date, j.job_id,j.job_title,d.department_id,d.department_name,l.location_id,city,postal_code from job_history jh left outer join employees e on jh.employee_id = e.employee_id  left outer join  jobs j on jh.job_id = j.job_id left outer join departments d on jh.department_id = d.department_id inner join locations l on d.location_id = l.location_id limit 3`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+        
+
+
+
+        
 
             app.get('/jobRecords50',async(req,res)=>{
             try{
@@ -226,6 +282,47 @@ app.get('/67',async(req,res)=>{
                     }catch(err){
                         res.status(500).json({error:err.message});
                     }});
+               app.get('/77',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`SELECT CONCAT(e.first_name, ' ', e.last_name) AS full_name, e.salary, e.department_id FROM employees e WHERE e.salary = (SELECT MIN(salary) FROM employees WHERE department_id = e.department_id) limit 2`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+ app.get('/78',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`SELECT * FROM employees WHERE salary = ( SELECT DISTINCT salary FROM employees ORDER BY salary DESC LIMIT 1 OFFSET 2`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+
+                     app.get('/79',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`SELECT e.employee_id, CONCAT(e.first_name, ' ', e.last_name) AS full_name, e.salary FROM employees e WHERE e.salary > (SELECT AVG(salary) FROM employees) AND e.department_id IN (SELECT department_id FROM employees WHERE first_name LIKE '%J%' OR last_name LIKE '%J%') limit 2`);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+app.get('/80',async(req,res)=>{
+                    try{
+                        const result=await pool.query(`SELECT CONCAT(e.first_name, ' ', e.last_name) AS full_name, e.employee_id, j.job_title FROM employees e JOIN departments d ON e.department_id = d.department_id JOIN locations l ON d.location_id = l.location_id JOIN jobs j ON e.job_id = j.job_id WHERE l.city = 'Toronto' ; `);
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+         app.get('/Dept',async(req,res)=>{
+                    try{
+                        const result=await pool.query('select count(*) from departments');
+                        res.json(result.rows);
+                    }catch(err){
+                        res.status(500).json({error:err.message});
+                    }});
+        
+
+
+
+
 
                 app.get('/Dept',async(req,res)=>{
                     try{
